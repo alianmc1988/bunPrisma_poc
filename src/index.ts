@@ -1,8 +1,14 @@
-import { Elysia } from 'elysia'
-import Config from './external/config'
+import app from './external/Api/app'
+import { PrismaClient } from '@prisma/client'
 
-const app = new Elysia().get('/', () => 'Hello Elysia').listen(Config.port)
+const prisma = new PrismaClient({
+	log: ['query', 'info', 'warn', 'error'],
+})
 
-console.log(
-	`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
-)
+const PORT = process.env.PORT || 3000
+
+app.decorate('db', prisma)
+
+app.listen(PORT, () => {
+	console.log(`Server started on port ${PORT}`)
+})

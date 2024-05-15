@@ -1,20 +1,28 @@
 {
-	"name": "app",
-	"version": "1.0.50",
-	"scripts": {
-		"test": "echo \"Error: no test specified\" && exit 1",
-		"dev": "cross-env NODE_ENV=development bun run --watch src/index.ts",
-		"prisma:generate": "prisma generate",
-		"prisma:migrate": "prisma migrate dev"
-	},
-	"dependencies": {
-		"elysia": "latest"
-	},
-	"devDependencies": {
-		"@types/bun": "^1.1.1",
-		"bun-types": "latest",
-		"cross-env": "^7.0.3",
-		"prisma": "^5.13.0"
-	},
-	"module": "src/index.js"
+  "name": "app",
+  "version": "1.0.50",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cross-env NODE_ENV=production bun run src/index.ts",
+    "dev": "cross-env NODE_ENV=development bun run --watch src/index.ts",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
+  },
+  "dependencies": {
+    "@elysiajs/bearer": "^1.0.2",
+    "@elysiajs/cors": "^1.0.2",
+    "@elysiajs/jwt": "^1.0.2",
+    "@prisma/client": "5.13.0",
+    "elysia": "latest",
+    "elysia-http-status-code": "^1.0.9",
+    "elysia-requestid": "1.0.9",
+    "uuidv4": "^6.2.13"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.1.1",
+    "bun-types": "latest",
+    "cross-env": "^7.0.3",
+    "prisma": "^5.13.0"
+  },
+  "module": "src/index.js"
 }

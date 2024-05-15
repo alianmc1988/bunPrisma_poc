@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Bar {
+  id        String   @id @default(cuid())
+  name      String
+  address   String
+  customer  Customer @relation(fields: [customerId], references: [id])
+  customerId String
+  staff     Staff[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+
+model User {
+  id        String     @id @default(cuid())
+  email     String     @unique
+  password  String
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  profiles  Profiles[]
+}
+
+model Profiles {
+  id        String   @id @default(cuid())
+  firstName      String
+  lastName       String
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  type      ProfileType
+  customer Customer?
+  staff    Staff?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Customer {
+  id        String   @id @default(cuid())
+  profileId String @unique
+  profile   Profiles @relation(fields: [profileId], references: [id])
+  bar Bar[]
+}
+
+model Staff {
+  id        String   @id @default(cuid())
+  profileId String @unique
+  profile   Profiles @relation(fields: [profileId], references: [id])
+  bar      Bar      @relation(fields: [barId], references: [id])
+  barId String @unique
+  type    StaffType
+
+
+}
+
+enum  StaffType {
+  CASHER
+  MANAGER
+}
+
+enum ProfileType {
+  CUSTOMER
+  STAFF
+  SUPER_ADMIN
+}
