@@ -3,6 +3,7 @@ import { IUserRepository } from './IUserRepository'
 import { CreateUserDTO } from '../PresentationLayer/DTOs/CreateUsersDTO'
 import { UpdateUserDTO } from '../PresentationLayer/DTOs/UpdateUserDTO'
 import { NotFoundError } from 'elysia'
+import { IQuery, OrderByEnum } from '../PresentationLayer/DTOs/ListUsersDTO'
 
 export class UserRepository implements IUserRepository {
 	db: PrismaClient
@@ -10,8 +11,13 @@ export class UserRepository implements IUserRepository {
 		this.db = db
 	}
 
-	async listUsers(): Promise<Array<User>> {
-		const data = await this.db.user.findMany()
+	async listUsers(query: IQuery): Promise<Array<User>> {
+		const data = await this.db.user.findMany({
+			skip: +query.skip,
+			take: +query.take,
+			orderBy: query.orderBy || { createdAt: OrderByEnum.ASC },
+		})
+		console.log(data)
 		return data as Array<User>
 	}
 

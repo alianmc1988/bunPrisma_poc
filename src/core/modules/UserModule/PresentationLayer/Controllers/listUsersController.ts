@@ -1,8 +1,15 @@
+import { IQuery } from './../DTOs/ListUsersDTO'
 import { PrismaClient } from '@prisma/client'
 import { listUsersUsecase } from '../../AplicationLayer/UseCases/ListUserUsecase'
 import { UserRepository } from '../../InfrastructureLayer/UserRepository'
 
-export const listUsersController = ({ db }: { db: PrismaClient }) => {
+export const listUsersController = ({
+	db,
+	query,
+}: {
+	db: PrismaClient
+	query: IQuery
+}) => {
 	const repository = new UserRepository(db)
-	return listUsersUsecase(repository)
+	return listUsersUsecase(repository, query)
 }
