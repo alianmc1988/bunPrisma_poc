@@ -9,6 +9,7 @@ import { AuthRoutes } from '../../../core/modules/AuthModule/PresentationLayer/R
 import { DatabaseError } from '../../../core/shared/errors/DatabaseError'
 import { requestID } from 'elysia-requestid'
 import { NotFoundError } from '../../../core/shared/errors/NotFoundError'
+import swagger from '@elysiajs/swagger'
 
 const basePath = '/api/v1'
 
@@ -25,6 +26,7 @@ RouterV1.error('UNPROCESSABLE_ENTITY', UnprocessableEntityError)
 	.error('DATABASE_ERROR', DatabaseError)
 	.error('NOT_FOUND', NotFoundError)
 	.onError(globalErrorHandler)
+	.use(swagger())
 	.use(UserRoutes)
 	.use(AuthRoutes)
 
