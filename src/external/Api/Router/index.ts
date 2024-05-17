@@ -9,6 +9,11 @@ import { AuthRoutes } from '../../../core/modules/AuthModule/PresentationLayer/R
 import { DatabaseError } from '../../../core/shared/errors/DatabaseError'
 import { requestID } from 'elysia-requestid'
 import { NotFoundError } from '../../../core/shared/errors/NotFoundError'
+import swagger from '@elysiajs/swagger'
+import bearer from '@elysiajs/bearer'
+import jwt from '@elysiajs/jwt'
+import { AuthGuard } from '../../../core/shared/guards/Authentication/AuthGuard'
+import { config } from '../Config/config'
 
 const basePath = '/api/v1'
 
@@ -25,7 +30,10 @@ RouterV1.error('UNPROCESSABLE_ENTITY', UnprocessableEntityError)
 	.error('DATABASE_ERROR', DatabaseError)
 	.error('NOT_FOUND', NotFoundError)
 	.onError(globalErrorHandler)
-	.use(UserRoutes)
+	.use(swagger())
+	.use(bearer())
+	.use(jwt(config.jwtConfig))
+	.guard((app) => app.use(AuthGuard).use(UserRoutes))
 	.use(AuthRoutes)
 
 export default RouterV1
