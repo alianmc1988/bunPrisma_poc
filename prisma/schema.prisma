@@ -11,9 +11,8 @@ model Bar {
   id        String   @id @default(cuid())
   name      String
   address   String
-  customer  Customer @relation(fields: [customerId], references: [id])
-  customerId String
   staff     Staff[]
+  profileInBar ProfileInBar[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -26,47 +25,54 @@ model User {
   token     String     @default("")
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
-  profiles  Profiles[]
+  profiles  Profile[]
 }
 
-model Profiles {
+model Profile {
   id        String   @id @default(cuid())
   firstName      String
   lastName       String
   user      User     @relation(fields: [userId], references: [id])
   userId    String
-  type      ProfileType
-  customer Customer?
-  staff    Staff?
+  role      Role @default(CUSTOMER)
+  staff     Staff[]
+  profileInBar ProfileInBar[]
+  barId     String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model Customer {
+
+model ProfileInBar {
   id        String   @id @default(cuid())
+  profile   Profile @relation(fields: [profileId], references: [id])
   profileId String @unique
-  profile   Profiles @relation(fields: [profileId], references: [id])
-  bar Bar[]
+  bar       Bar     @relation(fields: [barId], references: [id])
+  barId     String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+
 
 model Staff {
   id        String   @id @default(cuid())
+  staffType StaffType
+  profile   Profile @relation(fields: [profileId], references: [id])
   profileId String @unique
-  profile   Profiles @relation(fields: [profileId], references: [id])
-  bar      Bar      @relation(fields: [barId], references: [id])
-  barId String @unique
-  type    StaffType
-
-
+  bar       Bar     @relation(fields: [barId], references: [id])
+  barId     String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
+
 
 enum  StaffType {
   CASHER
   MANAGER
 }
 
-enum ProfileType {
+enum Role {
   CUSTOMER
   STAFF
-  SUPER_ADMIN
+  SUPER_ADMIN 
 }
