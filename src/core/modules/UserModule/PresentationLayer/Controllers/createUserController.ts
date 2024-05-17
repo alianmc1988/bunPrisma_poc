@@ -3,7 +3,7 @@ import { UserRepository } from '../../InfrastructureLayer/UserRepository'
 import { createUserUsecase } from '../../AplicationLayer/UseCases/CreateUserUsecase'
 
 export const createUserController = (payload: CreateUserDTOPayload) => {
-	const { db, body } = payload
-	const repo = new UserRepository(db)
+	const { body } = payload
+	const repo = new UserRepository()
 	return createUserUsecase(body, repo)
 }

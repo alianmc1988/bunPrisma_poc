@@ -7,17 +7,20 @@ import { IQuery, OrderByEnum } from '../PresentationLayer/DTOs/ListUsersDTO'
 
 export class UserRepository implements IUserRepository {
 	db: PrismaClient
-	constructor(db: PrismaClient) {
-		this.db = db
+	constructor() {
+		this.db = new PrismaClient()
 	}
 
 	async listUsers(query: IQuery): Promise<Array<User>> {
-		const data = await this.db.user.findMany({
-			skip: +query.skip,
-			take: +query.take,
-			orderBy: query.orderBy || { createdAt: OrderByEnum.ASC },
-		})
-		console.log(data)
+		const queryData = {
+			skip: 0,
+			take: 10,
+			orderBy: { createdAt: OrderByEnum.ASC },
+		}
+		query?.skip && (queryData['skip'] = +query.skip)
+		query?.take && (queryData['take'] = +query.take)
+		query?.orderBy && (queryData['orderBy'] = query.orderBy)
+		const data = await this.db.user.findMany(queryData)
 		return data as Array<User>
 	}
 
@@ -41,8 +44,27 @@ export class UserRepository implements IUserRepository {
 			data: payload,
 		})
 	}
-	async deleteUser(id: string): Promise<string | void> {
+
+	async updateUserToken(id: string, payload: { token: string }): Promise<User> {
+		const data = await this.db.user.update({
+			where: { id },
+			data: payload,
+		})
+
+		return data
+	}
+	async deleteUser(id: string): Promise<string> {
 		await this.db.user.delete({ where: { id } })
 		return `User id: ${id} was deleted`
+	}
+
+	async findUserByEmail(email: string): Promise<User> {
+		const user = await this.db.user.findUnique({
+			where: { email },
+		})
+		if (!user || user === null) {
+			throw new NotFoundError(`User with email: ${email} not found`)
+		}
+		return user
 	}
 }

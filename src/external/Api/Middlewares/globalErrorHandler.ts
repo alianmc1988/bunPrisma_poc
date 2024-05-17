@@ -1,5 +1,4 @@
 import { HttpStatusEnum } from 'elysia-http-status-code/status'
-import { t } from 'elysia'
 
 export const globalErrorHandler = ({
 	set,

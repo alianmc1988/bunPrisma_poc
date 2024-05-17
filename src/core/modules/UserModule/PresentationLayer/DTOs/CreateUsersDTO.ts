@@ -7,5 +7,4 @@ export interface CreateUserDTO {
 
 export interface CreateUserDTOPayload {
 	body: CreateUserDTO
-	db: PrismaClient
 }
